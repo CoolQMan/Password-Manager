@@ -71,6 +71,5 @@ public class EditPasswordActivity extends AppCompatActivity {
                     .setNegativeButton("No", null)
                     .show();
         });
-
     }
 }

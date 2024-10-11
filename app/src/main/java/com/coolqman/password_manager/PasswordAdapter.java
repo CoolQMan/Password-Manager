@@ -34,7 +34,12 @@ public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.Passwo
         Password password = passwordList.get(position);
         holder.websiteTextView.setText(password.getWebsite());
         holder.usernameTextView.setText("Username: " + password.getUsername());
-        holder.passwordTextView.setText("Password: ********");
+
+        if(password.isPasswordVisible()){
+            holder.passwordTextView.setText("Password: " + password.getPassword());
+        } else{
+            holder.passwordTextView.setText("Password: **********");
+        }
 
         // Set long click listener to delete password
         holder.itemView.setOnLongClickListener(v -> {

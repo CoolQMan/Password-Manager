@@ -1,5 +1,7 @@
-<RelativeLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp">
@@ -8,17 +10,55 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/fabAddPassword"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:src="@drawable/ic_add"
+        android:layout_alignParentBottom="true"
+        android:backgroundTint="@color/colorAccent"
         android:contentDescription="Add Password"
-        android:backgroundTint="@color/colorAccent"/>
-</RelativeLayout>
+        android:src="@drawable/ic_add"
+        app:layout_constraintBottom_toBottomOf="@+id/recyclerView"
+        app:layout_constraintEnd_toEndOf="@+id/recyclerView" />
+
+    <TextView
+        android:id="@+id/userHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:fontFamily="monospace"
+        android:text="Long press to edit or delete password"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/addHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/fabAddPassword"
+        android:layout_toStartOf="@+id/fabAddPassword"
+        android:text="Click + to add your first password"
+        app:layout_constraintBottom_toTopOf="@+id/fabAddPassword"
+        app:layout_constraintEnd_toStartOf="@+id/fabAddPassword" />
+
+    <ImageView
+        android:layout_width="65dp"
+        android:layout_height="66dp"
+        android:id="@+id/arrow"
+        android:src="@mipmap/arrow_right_foreground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/fabAddPassword"
+        app:layout_constraintTop_toBottomOf="@+id/addHint" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

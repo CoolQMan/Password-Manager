@@ -4,11 +4,13 @@ public class Password {
     private String website;
     private String password;
     private String username;
+    private boolean isVisibile;
 
     public Password(String website, String username, String password) {
         this.website = website;
         this.password = password;
         this.username = username;
+        this.isVisibile = false;
     }
 
     // Getters and Setters
@@ -35,4 +37,13 @@ public class Password {
     public void setUsername(String username) {
         this.username = username;
     }
+
+    public boolean isPasswordVisible(){
+        return this.isVisibile;
+    }
+
+    public void setVisibile(boolean isVisibile){
+        this.isVisibile = isVisibile;
+    }
 }
+

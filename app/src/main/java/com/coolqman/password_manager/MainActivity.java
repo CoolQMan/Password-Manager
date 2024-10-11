@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,6 +29,9 @@ public class MainActivity extends AppCompatActivity implements PasswordAdapter.O
     private List<Password> passwordList;
     private FloatingActionButton fab;
 
+    private TextView userHint, addHint;
+    private ImageView arrow;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,9 +39,14 @@ public class MainActivity extends AppCompatActivity implements PasswordAdapter.O
 
         recyclerView = findViewById(R.id.recyclerView);
         fab = findViewById(R.id.fabAddPassword);
+        userHint = findViewById(R.id.userHint);
+        addHint = findViewById(R.id.addHint);
+        arrow = findViewById(R.id.arrow);
 
         passwordList = new ArrayList<>();
         adapter = new PasswordAdapter(passwordList, this);
+
+        checkPasswordList();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
@@ -47,12 +57,6 @@ public class MainActivity extends AppCompatActivity implements PasswordAdapter.O
         });
     }
 
-    @Override
-    public void onItemClick(int position) {
-        // Reveal password on item click
-        Password password = passwordList.get(position);
-        Toast.makeText(this, "Password: " + password.getPassword(), Toast.LENGTH_SHORT).show();
-    }
 
     @Override
     public void onItemLongClick(int position) {
@@ -63,7 +67,14 @@ public class MainActivity extends AppCompatActivity implements PasswordAdapter.O
         intent.putExtra("username", password.getUsername());
         intent.putExtra("password", password.getPassword());
         intent.putExtra("position", position);
-        startActivityForResult(intent, 2); // Different request code for editing
+        startActivityForResult(intent, 2);// Different request code for editing
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        Password password = passwordList.get(position);
+        password.setVisibile(!password.isPasswordVisible());
+        adapter.notifyItemChanged(position);
     }
 
 
@@ -95,6 +106,19 @@ public class MainActivity extends AppCompatActivity implements PasswordAdapter.O
                 adapter.notifyDataSetChanged(); // Notify adapter
                 Toast.makeText(this, "Password deleted", Toast.LENGTH_SHORT).show();
             }
+        }
+        checkPasswordList();
+    }
+
+    private void checkPasswordList(){
+        if(passwordList.isEmpty()){
+            userHint.setVisibility(View.VISIBLE);
+            addHint.setVisibility(View.VISIBLE);
+            arrow.setVisibility(View.VISIBLE);
+        } else{
+            userHint.setVisibility(View.GONE);
+            addHint.setVisibility(View.GONE);
+            arrow.setVisibility(View.GONE);
         }
     }
 
