@@ -16,6 +16,7 @@ public class EditPasswordActivity extends AppCompatActivity {
     private EditText etWebsite, etUsername, etPassword;
     private Button btnSave;
     private ImageButton btnDelete;
+    private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,14 +31,15 @@ public class EditPasswordActivity extends AppCompatActivity {
 
         // Get data from intent for editing
         Intent intent = getIntent();
+        position = intent.getIntExtra("position", -1);
         if (intent.hasExtra("website") && intent.hasExtra("username") && intent.hasExtra("password")) {
             String website = intent.getStringExtra("website");
             String username = intent.getStringExtra("username");
             String password = intent.getStringExtra("password");
+
             etWebsite.setText(website);
             etUsername.setText(username);
             etPassword.setText(password);
-            btnSave.setText("Update Password");
         }
 
         // Handle save button click
@@ -50,6 +52,7 @@ public class EditPasswordActivity extends AppCompatActivity {
             resultIntent.putExtra("website", website);
             resultIntent.putExtra("username", username);
             resultIntent.putExtra("password", password);
+            resultIntent.putExtra("position", position);
             setResult(RESULT_OK, resultIntent);
             finish();
         });
@@ -60,11 +63,14 @@ public class EditPasswordActivity extends AppCompatActivity {
                     .setTitle("Delete Password")
                     .setMessage("Are you sure you want to delete this password?")
                     .setPositiveButton("Yes", (dialog, which) -> {
-                        setResult(RESULT_FIRST_USER); // Use a specific code for deletion
+                        Intent resultIntent = new Intent();
+                        resultIntent.putExtra("position", getIntent().getIntExtra("position", -1)); // Pass the position back
+                        setResult(MainActivity.RESULT_DELETED, resultIntent); // Use the custom deletion code
                         finish();
                     })
                     .setNegativeButton("No", null)
                     .show();
         });
+
     }
 }

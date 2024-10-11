@@ -20,6 +20,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements PasswordAdapter.OnItemClickListener {
 
+    public static final int RESULT_DELETED = 3;
+
     private RecyclerView recyclerView;
     private PasswordAdapter adapter;
     private List<Password> passwordList;
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements PasswordAdapter.O
         intent.putExtra("website", password.getWebsite());
         intent.putExtra("username", password.getUsername());
         intent.putExtra("password", password.getPassword());
+        intent.putExtra("position", position);
         startActivityForResult(intent, 2); // Different request code for editing
     }
 
@@ -77,42 +80,22 @@ public class MainActivity extends AppCompatActivity implements PasswordAdapter.O
             passwordList.add(newPassword);
             adapter.notifyDataSetChanged();
         } else if (requestCode == 2) {
-            if (resultCode == RESULT_OK) {
+            int position = data.getIntExtra("position", -1); // Get the position
+            if (resultCode == RESULT_OK && position != -1) {
                 // Password updated
                 String website = data.getStringExtra("website");
                 String username = data.getStringExtra("username");
                 String password = data.getStringExtra("password");
-                int position = data.getIntExtra("position", -1);
 
-                if (position != -1) {
-                    passwordList.set(position, new Password(website, username, password));
-                    adapter.notifyItemChanged(position);
-                }
-            } else if (resultCode == RESULT_FIRST_USER) {
+                passwordList.set(position, new Password(website, username, password));
+                adapter.notifyDataSetChanged();
+            } else if (resultCode == RESULT_DELETED && position != -1) {
                 // Handle deletion
-                int position = data.getIntExtra("position", -1); // Get the position to delete
-                if (position != -1) {
-                    passwordList.remove(position); // Remove from the list
-                    adapter.notifyItemRemoved(position); // Notify adapter
-                    Toast.makeText(this, "Password deleted", Toast.LENGTH_SHORT).show();
-                }
+                passwordList.remove(position); // Remove from the list
+                adapter.notifyDataSetChanged(); // Notify adapter
+                Toast.makeText(this, "Password deleted", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-
-
-    // Method to show delete confirmation dialog
-    public void showDeleteConfirmationDialog(int position) {
-        new AlertDialog.Builder(this)
-                .setTitle("Delete Password")
-                .setMessage("Are you sure you want to delete this password?")
-                .setPositiveButton("Yes", (dialog, which) -> {
-                    passwordList.remove(position);
-                    adapter.notifyItemRemoved(position);
-                    Toast.makeText(MainActivity.this, "Password deleted", Toast.LENGTH_SHORT).show();
-                })
-                .setNegativeButton("No", null)
-                .show();
-    }
 }

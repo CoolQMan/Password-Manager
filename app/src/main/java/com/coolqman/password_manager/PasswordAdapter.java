@@ -14,10 +14,12 @@ public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.Passwo
 
     private List<Password> passwordList;
     private OnItemClickListener listener;
+    private boolean[] passwordVisibility;
 
     public PasswordAdapter(List<Password> passwordList, OnItemClickListener listener) {
         this.passwordList = passwordList;
         this.listener = listener;
+        passwordVisibility = new boolean[passwordList.size()];
     }
 
     @NonNull
@@ -32,7 +34,7 @@ public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.Passwo
         Password password = passwordList.get(position);
         holder.websiteTextView.setText(password.getWebsite());
         holder.usernameTextView.setText("Username: " + password.getUsername());
-        holder.passwordTextView.setText("Password: ********"); // Hide password with asterisks
+        holder.passwordTextView.setText("Password: ********");
 
         // Set long click listener to delete password
         holder.itemView.setOnLongClickListener(v -> {
