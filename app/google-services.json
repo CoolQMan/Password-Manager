@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "61179460441",
+    "project_id": "password-manager-gdsc",
+    "storage_bucket": "password-manager-gdsc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:61179460441:android:c9647269269f4dc73f6a48",
+        "android_client_info": {
+          "package_name": "com.coolqman.password_manager"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_jH82O__BXGZd0aP_NVIFjdKIjGpXTmw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

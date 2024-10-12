@@ -132,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
             Password newPassword = new Password(id, website, username, password);
             dbHelper.addPassword(newPassword);
             passwordList.add(newPassword);
+            adapter.updateList(passwordList);
             adapter.notifyDataSetChanged();
         } else if (requestCode == 2) {
             int position = data.getIntExtra("position", -1); // Get the position
@@ -146,12 +147,14 @@ public class MainActivity extends AppCompatActivity {
                 Password updatedPassword = new Password(id, website, username, password);
                 dbHelper.updatePassword(updatedPassword, position);
                 passwordList.set(position, updatedPassword);
+                adapter.updateList(passwordList);
                 adapter.notifyDataSetChanged();
             } else if (resultCode == RESULT_DELETED && position != -1) {
                 // Handle deletion
                 Password deletedPassword = passwordList.get(position);
                 dbHelper.deletePassword(deletedPassword.getId());
                 passwordList.remove(position); // Remove from the list
+                adapter.updateList(passwordList);
                 adapter.notifyDataSetChanged(); // Notify adapter
                 Toast.makeText(this, "Password deleted", Toast.LENGTH_SHORT).show();
             }
@@ -161,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void checkPasswordList(){
-        if(passwordList.isEmpty()){
+        if(dbHelper.getAllPasswords().isEmpty()){
             userHint.setVisibility(View.VISIBLE);
             addHint.setVisibility(View.VISIBLE);
             arrow.setVisibility(View.VISIBLE);
@@ -257,6 +260,7 @@ public class MainActivity extends AppCompatActivity {
             // Notify the adapter that the data has changed
             adapter.notifyDataSetChanged();
         }, 300); // Delay must match the duration of the slide-out animation
+        checkPasswordList();
     }
 
 
