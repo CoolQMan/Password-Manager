@@ -20,7 +20,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements PasswordAdapter.OnItemClickListener {
+public class MainActivity extends AppCompatActivity {
 
     public static final int RESULT_DELETED = 3;
 
@@ -44,7 +44,25 @@ public class MainActivity extends AppCompatActivity implements PasswordAdapter.O
         arrow = findViewById(R.id.arrow);
 
         passwordList = new ArrayList<>();
-        adapter = new PasswordAdapter(passwordList, this);
+        adapter = new PasswordAdapter(passwordList, new PasswordAdapter.OnItemClickListener() {
+            @Override
+            public void onItemLongClick(int position) {
+                Password password = passwordList.get(position);
+                Intent intent = new Intent(MainActivity.this, EditPasswordActivity.class);
+                intent.putExtra("website", password.getWebsite());
+                intent.putExtra("username", password.getUsername());
+                intent.putExtra("password", password.getPassword());
+                intent.putExtra("position", position);
+                startActivityForResult(intent, 2);// Different request code for editing
+            }
+
+            @Override
+            public void onItemClick(int position) {
+                Password password = passwordList.get(position);
+                password.setVisibile(!password.isPasswordVisible());
+                adapter.notifyItemChanged(position);
+            }
+        });
 
         checkPasswordList();
 
@@ -58,24 +76,6 @@ public class MainActivity extends AppCompatActivity implements PasswordAdapter.O
     }
 
 
-    @Override
-    public void onItemLongClick(int position) {
-        // Open edit screen on long click
-        Password password = passwordList.get(position);
-        Intent intent = new Intent(MainActivity.this, EditPasswordActivity.class);
-        intent.putExtra("website", password.getWebsite());
-        intent.putExtra("username", password.getUsername());
-        intent.putExtra("password", password.getPassword());
-        intent.putExtra("position", position);
-        startActivityForResult(intent, 2);// Different request code for editing
-    }
-
-    @Override
-    public void onItemClick(int position) {
-        Password password = passwordList.get(position);
-        password.setVisibile(!password.isPasswordVisible());
-        adapter.notifyItemChanged(position);
-    }
 
 
     @Override

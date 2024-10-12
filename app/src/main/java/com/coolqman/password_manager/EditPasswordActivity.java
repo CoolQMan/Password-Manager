@@ -1,12 +1,12 @@
 package com.coolqman.password_manager;
 
-import android.content.DialogInterface;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -48,13 +48,23 @@ public class EditPasswordActivity extends AppCompatActivity {
             String username = etUsername.getText().toString().trim();
             String password = etPassword.getText().toString().trim();
 
-            Intent resultIntent = new Intent();
-            resultIntent.putExtra("website", website);
-            resultIntent.putExtra("username", username);
-            resultIntent.putExtra("password", password);
-            resultIntent.putExtra("position", position);
-            setResult(RESULT_OK, resultIntent);
-            finish();
+            // Check if any field is empty
+            if (website.isEmpty()) {
+                Toast.makeText(EditPasswordActivity.this, "Please fill in the Website field", Toast.LENGTH_SHORT).show();
+            } else if (username.isEmpty()) {
+                Toast.makeText(EditPasswordActivity.this, "Please fill in the Username field", Toast.LENGTH_SHORT).show();
+            } else if (password.isEmpty()) {
+                Toast.makeText(EditPasswordActivity.this, "Please fill in the Password field", Toast.LENGTH_SHORT).show();
+            } else {
+                // All fields are filled, save the data and return to MainActivity
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("website", website);
+                resultIntent.putExtra("username", username);
+                resultIntent.putExtra("password", password);
+                resultIntent.putExtra("position", position);
+                setResult(RESULT_OK, resultIntent);
+                finish();
+            }
         });
 
         // Handle delete button click
@@ -71,5 +81,15 @@ public class EditPasswordActivity extends AppCompatActivity {
                     .setNegativeButton("No", null)
                     .show();
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        // Simply set the result as canceled to indicate no changes were made
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("position", position);
+        setResult(RESULT_CANCELED, resultIntent);
+        finish();
+        super.onBackPressed(); // This will navigate back to MainActivity without closing it
     }
 }
