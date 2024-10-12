@@ -1,19 +1,28 @@
 package com.coolqman.password_manager;
 
 public class Password {
+
+    private int id;
     private String website;
     private String password;
     private String username;
-    private boolean isVisibile;
+    private boolean isVisible;
 
-    public Password(String website, String username, String password) {
+
+    public Password(int id, String website, String username, String password) {
+
+        this.id = id;
         this.website = website;
         this.password = password;
         this.username = username;
-        this.isVisibile = false;
+        this.isVisible = false;
     }
 
     // Getters and Setters
+    public int getId() {
+        return id;
+    }
+
     public String getWebsite() {
         return website;
     }
@@ -39,11 +48,11 @@ public class Password {
     }
 
     public boolean isPasswordVisible(){
-        return this.isVisibile;
+        return this.isVisible;
     }
 
-    public void setVisibile(boolean isVisibile){
-        this.isVisibile = isVisibile;
+    public void setVisible(boolean isVisible){
+        this.isVisible = isVisible;
     }
 }
 

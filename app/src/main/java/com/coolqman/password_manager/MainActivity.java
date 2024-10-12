@@ -1,16 +1,12 @@
 package com.coolqman.password_manager;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,10 +28,13 @@ public class MainActivity extends AppCompatActivity {
     private TextView userHint, addHint;
     private ImageView arrow;
 
+    private DatabaseHelper dbHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         recyclerView = findViewById(R.id.recyclerView);
         fab = findViewById(R.id.fabAddPassword);
@@ -44,6 +43,14 @@ public class MainActivity extends AppCompatActivity {
         arrow = findViewById(R.id.arrow);
 
         passwordList = new ArrayList<>();
+
+
+        //Loading all passwords from db
+        dbHelper = new DatabaseHelper(this);
+        passwordList = dbHelper.getAllPasswords();
+        //Checking if password list is empty
+        checkPasswordList();
+
         adapter = new PasswordAdapter(passwordList, new PasswordAdapter.OnItemClickListener() {
             @Override
             public void onItemLongClick(int position) {
@@ -59,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(int position) {
                 Password password = passwordList.get(position);
-                password.setVisibile(!password.isPasswordVisible());
+                password.setVisible(!password.isPasswordVisible());
                 adapter.notifyItemChanged(position);
             }
         });
@@ -87,7 +94,10 @@ public class MainActivity extends AppCompatActivity {
             String username = data.getStringExtra("username");
             String password = data.getStringExtra("password");
 
-            Password newPassword = new Password(website, username, password);
+            int id = passwordList.isEmpty() ? 1 : passwordList.get(passwordList.size() - 1).getId() + 1;
+
+            Password newPassword = new Password(id, website, username, password);
+            dbHelper.addPassword(newPassword);
             passwordList.add(newPassword);
             adapter.notifyDataSetChanged();
         } else if (requestCode == 2) {
@@ -98,10 +108,16 @@ public class MainActivity extends AppCompatActivity {
                 String username = data.getStringExtra("username");
                 String password = data.getStringExtra("password");
 
-                passwordList.set(position, new Password(website, username, password));
+                int id = passwordList.get(position).getId();
+
+                Password updatedPassword = new Password(id, website, username, password);
+                dbHelper.updatePassword(updatedPassword, position);
+                passwordList.set(position, updatedPassword);
                 adapter.notifyDataSetChanged();
             } else if (resultCode == RESULT_DELETED && position != -1) {
                 // Handle deletion
+                Password deletedPassword = passwordList.get(position);
+                dbHelper.deletePassword(deletedPassword.getId());
                 passwordList.remove(position); // Remove from the list
                 adapter.notifyDataSetChanged(); // Notify adapter
                 Toast.makeText(this, "Password deleted", Toast.LENGTH_SHORT).show();
