@@ -1,39 +1,35 @@
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="vertical"
         android:gravity="center"
-        android:padding="24dp">
+        android:padding="16dp">
 
         <TextView
-            android:id="@+id/tvLoginTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Login"
+            android:text="Register/Login"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:gravity="center"
-            android:layout_marginBottom="24dp"/>
+            android:layout_marginBottom="24sp"/>
 
         <EditText
-            android:id="@+id/etEmail"
+            android:id="@+id/emailEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email"
-            android:inputType="textEmailAddress"
-            android:layout_marginBottom="12dp"/>
+            android:layout_margin="8dp"
+            android:inputType="textShortMessage"
+            android:hint="Email" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp">
+            android:layout_height="wrap_content">
 
             <!-- Password EditText -->
             <EditText
@@ -45,7 +41,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/btnTogglePasswordVisibility"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_margin="8dp"/>
 
             <!-- Show/Hide Password ImageButton -->
             <ImageButton
@@ -58,14 +55,34 @@
                 app:tint="@color/icon_color"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/etPassword"
-                app:layout_constraintBottom_toBottomOf="@+id/etPassword"/>
+                app:layout_constraintBottom_toBottomOf="@+id/etPassword"
+                android:layout_marginEnd="8dp"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <Button
-            android:id="@+id/btnLogin"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Login" />
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/registerButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:text="Register" />
+
+            <Button
+                android:id="@+id/loginButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:text="Login" />
+
+        </LinearLayout>
+
 
     </LinearLayout>
 </ScrollView>
