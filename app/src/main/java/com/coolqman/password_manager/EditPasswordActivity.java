@@ -3,7 +3,9 @@ package com.coolqman.password_manager;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -19,6 +21,9 @@ public class EditPasswordActivity extends AppCompatActivity {
     private Button btnSave;
     private ImageButton btnDelete;
     private int position;
+    private ImageButton togglePasswordVisibility;
+
+    private boolean isPasswordVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +40,27 @@ public class EditPasswordActivity extends AppCompatActivity {
         etPassword = findViewById(R.id.etPassword);
         btnSave = findViewById(R.id.btnSave);
         btnDelete = findViewById(R.id.btnDelete);
+        togglePasswordVisibility = findViewById(R.id.btnTogglePasswordVisibility);
+
+        togglePasswordVisibility.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isPasswordVisible) {
+                    // Hide password
+                    etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    togglePasswordVisibility.setImageResource(R.drawable.baseline_show_24); // Change to hide icon
+                } else {
+                    // Show password
+                    etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                    togglePasswordVisibility.setImageResource(R.drawable.baseline_hide_24); // Change to show icon
+                }
+                // Move the cursor to the end of the text
+                etPassword.setSelection(etPassword.length());
+                // Toggle the visibility state
+                isPasswordVisible = !isPasswordVisible;
+            }
+        });
+
 
         // Get data from intent for editing
         Intent intent = getIntent();

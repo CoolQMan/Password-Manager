@@ -12,5 +12,7 @@
     <color name="colorBackgroundDark">#121212</color>
     <color name="textColorPrimaryDark">#FFFFFF</color>
 
+    <color name="icon_color">#000000</color>
+
 
 </resources>
