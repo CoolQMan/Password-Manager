@@ -2,10 +2,13 @@ package com.coolqman.password_manager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class AddPasswordActivity extends AppCompatActivity {
@@ -17,6 +20,11 @@ public class AddPasswordActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_password);
+        setTitle("Password Manager");
+
+        if(getSupportActionBar()!=null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         etWebsite = findViewById(R.id.etWebsite);
         etPassword = findViewById(R.id.etPassword);
@@ -50,4 +58,13 @@ public class AddPasswordActivity extends AppCompatActivity {
 
     }
 
+
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == android.R.id.home){
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

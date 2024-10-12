@@ -1,12 +1,23 @@
 package com.coolqman.password_manager;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        setTitle("Password Manager");
 
         recyclerView = findViewById(R.id.recyclerView);
         fab = findViewById(R.id.fabAddPassword);
@@ -80,10 +91,31 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, AddPasswordActivity.class);
             startActivityForResult(intent, 1);
         });
+
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
 
-
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.action_refresh){
+            refreshPasswordList();
+            return true;
+        } else if(id == R.id.action_delete_all){
+            confirmDeleteAllPasswords();
+            return true;
+        } else if(id == R.id.action_hide_all){
+            hideAllPasswords();
+            return true;
+        } else{
+            return super.onOptionsItemSelected(item);
+        }
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -126,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
         checkPasswordList();
     }
 
+
     private void checkPasswordList(){
         if(passwordList.isEmpty()){
             userHint.setVisibility(View.VISIBLE);
@@ -137,5 +170,103 @@ public class MainActivity extends AppCompatActivity {
             arrow.setVisibility(View.GONE);
         }
     }
+
+    private void refreshPasswordList() {
+        // Create a list of views to animate
+        ViewGroup viewGroup = (ViewGroup) recyclerView.getParent();
+
+        // Get the current item count
+        int itemCount = adapter.getItemCount();
+
+        // Create an ArrayList to store current views before clearing them
+        List<View> viewsToAnimate = new ArrayList<>();
+
+        // Loop through the current items and get their views
+        for (int i = 0; i < itemCount; i++) {
+            View itemView = recyclerView.getChildAt(i);
+            if (itemView != null) {
+                viewsToAnimate.add(itemView);
+            }
+        }
+
+        // Start the slide-out animation for each view
+        for (View view : viewsToAnimate) {
+            Animation slideOut = AnimationUtils.loadAnimation(this, R.anim.slide_out);
+            slideOut.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {}
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    // Remove the view from the parent once the animation ends
+                    viewGroup.removeView(view);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {}
+            });
+            view.startAnimation(slideOut);
+        }
+
+        // Delay the loading of new passwords to ensure the animation finishes
+        new Handler().postDelayed(() -> {
+            // Clear the current password list
+            passwordList.clear();
+
+            // Fetch the updated list of passwords from the database
+            List<Password> newPasswords = dbHelper.getAllPasswords();
+
+            // Check if newPasswords is not null before adding
+            if (newPasswords != null) {
+                passwordList.addAll(newPasswords);
+            }
+
+            // Notify the adapter that the data has changed
+            adapter.notifyDataSetChanged();
+        }, 300); // Delay must match the duration of the slide-out animation
+    }
+
+
+    private void hideAllPasswords() {
+        for (Password password : passwordList) {
+            password.setVisible(false); // Assuming you have a setVisible method in your Password class
+        }
+        adapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
+    }
+
+    private void confirmDeleteAllPasswords() {
+        new AlertDialog.Builder(this)
+                .setTitle("Delete All Passwords")
+                .setMessage("Are you sure you want to delete all passwords?")
+                .setPositiveButton("Yes", (dialog, which) -> confirmFinalDeletion()) // Call final confirmation
+                .setNegativeButton("No", null) // Dismiss the dialog
+                .show();
+    }
+
+    private void confirmFinalDeletion() {
+        new AlertDialog.Builder(this)
+                .setTitle("Final Confirmation")
+                .setMessage("This action can NOT be undone. Are you sure you want to proceed?")
+                .setPositiveButton("Yes", (dialog, which) -> deleteAllPasswords()) // Proceed with deletion
+                .setNegativeButton("No", null) // Dismiss the dialog
+                .show();
+    }
+
+    private void deleteAllPasswords() {
+        // Delete all passwords from the database
+        dbHelper.deleteAllPasswords(); // Assuming you have a method in your DB helper to delete all
+
+        // Clear the password list
+        passwordList.clear();
+
+        // Notify the adapter that the data has changed
+        adapter.notifyDataSetChanged();
+
+        // Optionally, show a toast message to confirm deletion
+        Toast.makeText(this, "All passwords have been deleted.", Toast.LENGTH_SHORT).show();
+
+        checkPasswordList();
+    }
+
 
 }

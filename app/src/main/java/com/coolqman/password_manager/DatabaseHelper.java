@@ -97,4 +97,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.delete(TABLE_PASSWORDS, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
         db.close();
     }
+
+    public void deleteAllPasswords() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM " + TABLE_PASSWORDS); // Replace TABLE_PASSWORDS with your actual table name
+        db.close();
+    }
+
 }
