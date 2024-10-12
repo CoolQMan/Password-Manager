@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +21,7 @@ public class AuthActivity extends AppCompatActivity {
 
     private EditText emailEditText, passwordEditText;
     private Button loginButton, registerButton;
+    private TextView forgotPassword;
     private ImageButton togglePasswordVisibility;
     private boolean isPasswordVisible = false;
     private FirebaseAuth mAuth;
@@ -39,11 +41,19 @@ public class AuthActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.loginButton);
         registerButton = findViewById(R.id.registerButton);
         togglePasswordVisibility = findViewById(R.id.btnTogglePasswordVisibility);
+        forgotPassword = findViewById(R.id.forgotPasswordLink);
 
         // Set up button click listeners
         loginButton.setOnClickListener(view -> validateAndLogin());
         registerButton.setOnClickListener(view -> validateAndRegister());
         togglePasswordVisibility.setOnClickListener(view -> togglePasswordVisibility());
+        forgotPassword.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), ForgotPasswordActivity.class);
+            if(!emailEditText.getText().toString().isEmpty()){
+                intent.putExtra("email", emailEditText.getText().toString());
+            }
+            startActivity(intent);
+        });
     }
 
     private void validateAndLogin() {

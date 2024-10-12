@@ -305,5 +305,12 @@ public class MainActivity extends AppCompatActivity {
         checkPasswordList();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Clear focus from the search view
+        searchView.clearFocus();
+    }
+
 
 }
