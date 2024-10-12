@@ -1,18 +1,22 @@
 package com.coolqman.password_manager;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ObjectAnimator;
+
+import android.annotation.SuppressLint;
+
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,11 +40,14 @@ public class MainActivity extends AppCompatActivity {
     private List<Password> passwordList;
     private FloatingActionButton fab;
 
+
     private TextView userHint, addHint;
     private ImageView arrow;
+    private SearchView searchView;
 
     private DatabaseHelper dbHelper;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,13 +59,13 @@ public class MainActivity extends AppCompatActivity {
         userHint = findViewById(R.id.userHint);
         addHint = findViewById(R.id.addHint);
         arrow = findViewById(R.id.arrow);
+        searchView = findViewById(R.id.searchView);
 
         passwordList = new ArrayList<>();
-
-
         //Loading all passwords from db
         dbHelper = new DatabaseHelper(this);
         passwordList = dbHelper.getAllPasswords();
+
         //Checking if password list is empty
         checkPasswordList();
 
@@ -92,30 +99,24 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(intent, 1);
         });
 
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchView.clearFocus();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // Filter the RecyclerView items
+                adapter.getFilter().filter(newText);
+                return true;
+            }
+        });
+
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-        if(id == R.id.action_refresh){
-            refreshPasswordList();
-            return true;
-        } else if(id == R.id.action_delete_all){
-            confirmDeleteAllPasswords();
-            return true;
-        } else if(id == R.id.action_hide_all){
-            hideAllPasswords();
-            return true;
-        } else{
-            return super.onOptionsItemSelected(item);
-        }
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -170,6 +171,38 @@ public class MainActivity extends AppCompatActivity {
             arrow.setVisibility(View.GONE);
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        View view = getCurrentFocus();
+        searchView.clearFocus();
+        if(view != null){
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+        }
+        if(id == R.id.action_refresh){
+            refreshPasswordList();
+            return true;
+        } else if(id == R.id.action_delete_all){
+            confirmDeleteAllPasswords();
+            return true;
+        } else if(id == R.id.action_hide_all){
+            hideAllPasswords();
+            return true;
+        } else{
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
 
     private void refreshPasswordList() {
         // Create a list of views to animate
@@ -267,5 +300,6 @@ public class MainActivity extends AppCompatActivity {
 
         checkPasswordList();
     }
+
 
 }

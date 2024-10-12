@@ -3,23 +3,28 @@ package com.coolqman.password_manager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.PasswordViewHolder> {
+public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.PasswordViewHolder> implements Filterable {
 
     private List<Password> passwordList;
     private OnItemClickListener listener;
     private boolean[] passwordVisibility;
+    private List<Password> passwordListFull;
 
     public PasswordAdapter(List<Password> passwordList, OnItemClickListener listener) {
         this.passwordList = passwordList;
         this.listener = listener;
         passwordVisibility = new boolean[passwordList.size()];
+        passwordListFull = new ArrayList<>(passwordList);
     }
 
     @NonNull
@@ -59,6 +64,46 @@ public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.Passwo
     @Override
     public int getItemCount() {
         return passwordList.size();
+    }
+
+    @Override
+    public Filter getFilter() {
+        return passwordFilter;
+    }
+    private Filter passwordFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Password> filteredList = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(passwordListFull); // Show all passwords if no query
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (Password password : passwordListFull) {
+                    if (password.getWebsite().toLowerCase().contains(filterPattern) ||
+                            password.getUsername().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(password);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            return results;
+        }
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            passwordList.clear();
+            passwordList.addAll((List) results.values);
+            notifyDataSetChanged(); // Notify adapter of data changes
+        }
+    };
+
+    public void updateList(List<Password> newList) {
+        this.passwordList = newList;
+        passwordListFull = new ArrayList<>(newList);
+        notifyDataSetChanged();
     }
 
     static class PasswordViewHolder extends RecyclerView.ViewHolder {
