@@ -53,9 +53,7 @@ public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.Passwo
         });
 
         // Set click listener to reveal password (regular click)
-        holder.itemView.setOnClickListener(v -> {
-            listener.onItemClick(position);
-        });
+        holder.itemView.setOnClickListener(v -> listener.onItemClick(position));
 
         // Add delete button click listener here if you have a specific delete button in the item layout
     }
