@@ -5,6 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,14 +20,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "passwords_db";
 
     // Table name and column names
-    private static final String TABLE_PASSWORDS = "passwords";
+    private String TABLE_PASSWORDS;
     private static final String COLUMN_ID = "id";
     private static final String COLUMN_WEBSITE = "website";
     private static final String COLUMN_USERNAME = "username";
     private static final String COLUMN_PASSWORD = "password";
+    private static final String COLUMN_TIMESTAMP = "timestamp";
 
-    public DatabaseHelper(Context context) {
+
+    public DatabaseHelper(Context context, String userId) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.TABLE_PASSWORDS = "user_" + userId;
+        createUserTable();
+    }
+
+    private void createUserTable() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String CREATE_PASSWORDS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_PASSWORDS + " ("
+                + COLUMN_ID + " INTEGER PRIMARY KEY,"
+                + COLUMN_WEBSITE + " TEXT,"
+                + COLUMN_USERNAME + " TEXT,"
+                + COLUMN_PASSWORD + " TEXT,"
+                + COLUMN_TIMESTAMP + " BIGINT" + ")";
+        db.execSQL(CREATE_PASSWORDS_TABLE);
+        db.close();
     }
 
     @Override
@@ -33,7 +53,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + COLUMN_ID + " INTEGER PRIMARY KEY,"
                 + COLUMN_WEBSITE + " TEXT,"
                 + COLUMN_USERNAME + " TEXT,"
-                + COLUMN_PASSWORD + " TEXT" + ")";
+                + COLUMN_PASSWORD + " TEXT,"
+                + COLUMN_TIMESTAMP + " BIGINT" + ")";
         db.execSQL(CREATE_PASSWORDS_TABLE);
     }
 
@@ -52,6 +73,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_USERNAME, password.getUsername());
         values.put(COLUMN_PASSWORD, password.getPassword());
         values.put(COLUMN_ID, password.getId());
+        values.put(COLUMN_TIMESTAMP, password.getTimestamp());
 
         db.insert(TABLE_PASSWORDS, null, values);
         db.close();
@@ -69,8 +91,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 String website = cursor.getString(cursor.getColumnIndex(COLUMN_WEBSITE));
                 String username = cursor.getString(cursor.getColumnIndex(COLUMN_USERNAME));
                 String password = cursor.getString(cursor.getColumnIndex(COLUMN_PASSWORD));
+                long timestamp = cursor.getLong(cursor.getColumnIndex(COLUMN_TIMESTAMP));
 
-                Password p = new Password(id, website, username, password);
+                Password p = new Password(id, website, username, password, timestamp);
                 passwordList.add(p);
             } while (cursor.moveToNext());
         }
@@ -86,6 +109,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_WEBSITE, password.getWebsite());
         values.put(COLUMN_USERNAME, password.getUsername());
         values.put(COLUMN_PASSWORD, password.getPassword());
+        values.put(COLUMN_TIMESTAMP, password.getTimestamp());
 
         db.update(TABLE_PASSWORDS, values, COLUMN_ID + " = ?", new String[]{String.valueOf(password.getId())});
         db.close();

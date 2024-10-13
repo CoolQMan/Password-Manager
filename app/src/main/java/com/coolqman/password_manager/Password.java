@@ -7,15 +7,17 @@ public class Password {
     private String password;
     private String username;
     private boolean isVisible;
+    private long timestamp;
 
 
-    public Password(int id, String website, String username, String password) {
+    public Password(int id, String website, String username, String password, long timestamp) {
 
         this.id = id;
         this.website = website;
         this.password = password;
         this.username = username;
         this.isVisible = false;
+        this.timestamp = timestamp;
     }
 
     // Getters and Setters
@@ -53,6 +55,14 @@ public class Password {
 
     public void setVisible(boolean isVisible){
         this.isVisible = isVisible;
+    }
+
+    public long getTimestamp(){
+        return this.timestamp;
+    }
+
+    public void setTimestamp(long timestamp){
+        this.timestamp = timestamp;
     }
 }
 

@@ -1,8 +1,6 @@
 package com.coolqman.password_manager;
 
 
-import android.annotation.SuppressLint;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,6 +25,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
 
     private DatabaseHelper dbHelper;
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,9 +60,12 @@ public class MainActivity extends AppCompatActivity {
         arrow = findViewById(R.id.arrow);
         searchView = findViewById(R.id.searchView);
 
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = user.getUid();
+
         passwordList = new ArrayList<>();
         //Loading all passwords from db
-        dbHelper = new DatabaseHelper(this);
+        dbHelper = new DatabaseHelper(this, uid);
         passwordList = dbHelper.getAllPasswords();
 
         //Checking if password list is empty
@@ -129,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
 
             int id = passwordList.isEmpty() ? 1 : passwordList.get(passwordList.size() - 1).getId() + 1;
 
-            Password newPassword = new Password(id, website, username, password);
+            Password newPassword = new Password(id, website, username, password, System.currentTimeMillis());
             dbHelper.addPassword(newPassword);
             passwordList.add(newPassword);
             adapter.updateList(passwordList);
@@ -144,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
 
                 int id = passwordList.get(position).getId();
 
-                Password updatedPassword = new Password(id, website, username, password);
+                Password updatedPassword = new Password(id, website, username, password, System.currentTimeMillis());
                 dbHelper.updatePassword(updatedPassword, position);
                 passwordList.set(position, updatedPassword);
                 adapter.updateList(passwordList);
