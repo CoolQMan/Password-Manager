@@ -24,7 +24,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:inputType="textShortMessage"
+            android:inputType="textEmailAddress"
+            android:autofillHints="emailAddress"
             android:hint="Email" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -37,6 +38,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:hint="Password"
+                android:autofillHints="password"
                 android:inputType="textPassword"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/btnTogglePasswordVisibility"

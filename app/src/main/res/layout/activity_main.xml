@@ -1,7 +1,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_layout"
     android:padding="8dp"
     android:layout_width="match_parent"
@@ -27,7 +26,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:iconifiedByDefault="false"
         android:focusable="false"
-        android:focusedByDefault="false"
         android:layout_marginBottom="8dp"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -51,7 +49,7 @@
         android:layout_centerInParent="true"
         android:fontFamily="monospace"
         android:text="Long press to edit or delete password"
-        android:textSize="16dp"
+        android:textSize="16sp"
         android:textStyle="bold"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -73,6 +71,7 @@
         android:layout_width="65dp"
         android:layout_height="66dp"
         android:id="@+id/arrow"
+        android:contentDescription="Arrow"
         android:src="@mipmap/arrow_right_foreground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/fabAddPassword"

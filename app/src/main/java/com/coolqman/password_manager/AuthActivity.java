@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.Objects;
+
 public class AuthActivity extends AppCompatActivity {
 
     private EditText emailEditText, passwordEditText;
@@ -66,7 +68,7 @@ public class AuthActivity extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                     } else {
-                        if(task.getException().getMessage() == "The email address is badly formatted."){
+                        if(Objects.equals(Objects.requireNonNull(task.getException()).getMessage(), "The email address is badly formatted.")){
                             Toast.makeText(AuthActivity.this, "Login Failed: Enter valid Email Address!", Toast.LENGTH_SHORT).show();
                         } else{
                             Toast.makeText(AuthActivity.this, "Login Failed: Wrong Email or Password", Toast.LENGTH_SHORT).show();
