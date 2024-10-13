@@ -1,6 +1,5 @@
 package com.coolqman.password_manager;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -75,7 +74,6 @@ public class EditPasswordActivity extends AppCompatActivity {
             etPassword.setText(password);
         }
 
-        // Handle save button click
         btnSave.setOnClickListener(v -> {
             String website = etWebsite.getText().toString().trim();
             String username = etUsername.getText().toString().trim();
@@ -100,7 +98,6 @@ public class EditPasswordActivity extends AppCompatActivity {
             }
         });
 
-        // Handle delete button click
         btnDelete.setOnClickListener(v -> {
             new AlertDialog.Builder(this)
                     .setTitle("Delete Password")
@@ -118,12 +115,11 @@ public class EditPasswordActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        // Simply set the result as canceled to indicate no changes were made
         Intent resultIntent = new Intent();
-        resultIntent.putExtra("position", position);
+        resultIntent.putExtra("position", position); //need to put extra here or else app exits
         setResult(RESULT_CANCELED, resultIntent);
         finish();
-        super.onBackPressed(); // This will navigate back to MainActivity without closing it
+        super.onBackPressed();
     }
 
     @Override

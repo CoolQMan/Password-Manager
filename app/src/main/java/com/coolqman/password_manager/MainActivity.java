@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == RESULT_OK) {
-            // New password added
+            // New password add
             String website = data.getStringExtra("website");
             String username = data.getStringExtra("username");
             String password = data.getStringExtra("password");
@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
             adapter.updateList(passwordList);
             adapter.notifyDataSetChanged();
         } else if (requestCode == 2) {
-            int position = data.getIntExtra("position", -1); // Get the position
+            int position = data.getIntExtra("position", -1);
             if (resultCode == RESULT_OK && position != -1) {
                 // Password updated
                 String website = data.getStringExtra("website");
@@ -155,16 +155,16 @@ public class MainActivity extends AppCompatActivity {
                 // Handle deletion
                 Password deletedPassword = passwordList.get(position);
                 dbHelper.deletePassword(deletedPassword.getId());
-                passwordList.remove(position); // Remove from the list
+                passwordList.remove(position);
                 adapter.updateList(passwordList);
-                adapter.notifyDataSetChanged(); // Notify adapter
+                adapter.notifyDataSetChanged();
                 Toast.makeText(this, "Password deleted", Toast.LENGTH_SHORT).show();
             }
         }
         checkPasswordList();
     }
 
-
+    // To show or hide the text view and image view at the start
     private void checkPasswordList(){
         if(dbHelper.getAllPasswords().isEmpty()){
             userHint.setVisibility(View.VISIBLE);
@@ -177,6 +177,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Menu in action bar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -210,16 +211,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void refreshPasswordList() {
-        // Create a list of views to animate
         ViewGroup viewGroup = (ViewGroup) recyclerView.getParent();
-
-        // Get the current item count
         int itemCount = adapter.getItemCount();
-
-        // Create an ArrayList to store current views before clearing them
         List<View> viewsToAnimate = new ArrayList<>();
 
-        // Loop through the current items and get their views
         for (int i = 0; i < itemCount; i++) {
             View itemView = recyclerView.getChildAt(i);
             if (itemView != null) {
@@ -227,7 +222,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        // Start the slide-out animation for each view
         for (View view : viewsToAnimate) {
             Animation slideOut = AnimationUtils.loadAnimation(this, R.anim.slide_out);
             slideOut.setAnimationListener(new Animation.AnimationListener() {
@@ -236,7 +230,6 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-                    // Remove the view from the parent once the animation ends
                     viewGroup.removeView(view);
                 }
 
@@ -246,20 +239,15 @@ public class MainActivity extends AppCompatActivity {
             view.startAnimation(slideOut);
         }
 
-        // Delay the loading of new passwords to ensure the animation finishes
         new Handler().postDelayed(() -> {
-            // Clear the current password list
+            // Fetch all data from database and show them in recycler view
             passwordList.clear();
-
-            // Fetch the updated list of passwords from the database
             List<Password> newPasswords = dbHelper.getAllPasswords();
 
-            // Check if newPasswords is not null before adding
             if (newPasswords != null) {
                 passwordList.addAll(newPasswords);
             }
 
-            // Notify the adapter that the data has changed
             adapter.notifyDataSetChanged();
         }, 300); // Delay must match the duration of the slide-out animation
         checkPasswordList();
@@ -268,9 +256,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void hideAllPasswords() {
         for (Password password : passwordList) {
-            password.setVisible(false); // Assuming you have a setVisible method in your Password class
+            password.setVisible(false);
         }
-        adapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
+        adapter.notifyDataSetChanged();
     }
 
     private void confirmDeleteAllPasswords() {
@@ -293,17 +281,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void deleteAllPasswords() {
         // Delete all passwords from the database
-        dbHelper.deleteAllPasswords(); // Assuming you have a method in your DB helper to delete all
-
-        // Clear the password list
+        dbHelper.deleteAllPasswords();
         passwordList.clear();
-
-        // Notify the adapter that the data has changed
         adapter.notifyDataSetChanged();
 
-        // Optionally, show a toast message to confirm deletion
         Toast.makeText(this, "All passwords have been deleted.", Toast.LENGTH_SHORT).show();
-
         checkPasswordList();
     }
 
@@ -311,8 +293,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         // Clear focus from the search view
+        // Required because coming back to Main Activity focuses search view if it
+        // focused at any time
         searchView.clearFocus();
     }
-
-
 }

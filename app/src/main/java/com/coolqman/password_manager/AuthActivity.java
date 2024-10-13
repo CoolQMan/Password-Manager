@@ -3,18 +3,13 @@ package com.coolqman.password_manager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.coolqman.password_manager.R;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class AuthActivity extends AppCompatActivity {
@@ -29,13 +24,12 @@ public class AuthActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_auth); // Update with your layout name
+        setContentView(R.layout.activity_auth);
         setTitle("Password Manager");
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
-        // Find views by ID
         emailEditText = findViewById(R.id.emailEditText);
         passwordEditText = findViewById(R.id.etPassword);
         loginButton = findViewById(R.id.loginButton);
@@ -43,7 +37,6 @@ public class AuthActivity extends AppCompatActivity {
         togglePasswordVisibility = findViewById(R.id.btnTogglePasswordVisibility);
         forgotPassword = findViewById(R.id.forgotPasswordLink);
 
-        // Set up button click listeners
         loginButton.setOnClickListener(view -> validateAndLogin());
         registerButton.setOnClickListener(view -> validateAndRegister());
         togglePasswordVisibility.setOnClickListener(view -> togglePasswordVisibility());
@@ -60,13 +53,11 @@ public class AuthActivity extends AppCompatActivity {
         String email = emailEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
 
-        // Perform basic validation
         if (email.isEmpty() || password.isEmpty()) {
             Toast.makeText(this, "Email and Password cannot be empty", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Firebase Authentication
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
@@ -88,13 +79,11 @@ public class AuthActivity extends AppCompatActivity {
         String email = emailEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
 
-        // Perform basic validation
         if (email.isEmpty() || password.isEmpty()) {
             Toast.makeText(this, "Email and Password cannot be empty", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Firebase Authentication
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {

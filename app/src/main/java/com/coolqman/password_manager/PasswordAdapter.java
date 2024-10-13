@@ -46,18 +46,12 @@ public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.Passwo
             holder.passwordTextView.setText("Password: **********");
         }
 
-        // Set long click listener to delete password
         holder.itemView.setOnLongClickListener(v -> {
             listener.onItemLongClick(position);
-            return true; // Indicate that the long click was handled
+            return true;
         });
-
-        // Set click listener to reveal password (regular click)
         holder.itemView.setOnClickListener(v -> listener.onItemClick(position));
-
-        // Add delete button click listener here if you have a specific delete button in the item layout
     }
-
 
     @Override
     public int getItemCount() {
@@ -94,7 +88,7 @@ public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.Passwo
         protected void publishResults(CharSequence constraint, FilterResults results) {
             passwordList.clear();
             passwordList.addAll((List) results.values);
-            notifyDataSetChanged(); // Notify adapter of data changes
+            notifyDataSetChanged();
         }
     };
 
@@ -106,20 +100,20 @@ public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.Passwo
 
     static class PasswordViewHolder extends RecyclerView.ViewHolder {
         TextView websiteTextView;
-        TextView usernameTextView; // Added for displaying username
-        TextView passwordTextView; // TextView to display password (hidden)
+        TextView usernameTextView;
+        TextView passwordTextView;
 
         public PasswordViewHolder(@NonNull View itemView) {
             super(itemView);
             websiteTextView = itemView.findViewById(R.id.websiteTextView);
-            usernameTextView = itemView.findViewById(R.id.usernameTextView); // Initialize username TextView
-            passwordTextView = itemView.findViewById(R.id.passwordTextView); // Initialize password TextView
+            usernameTextView = itemView.findViewById(R.id.usernameTextView);
+            passwordTextView = itemView.findViewById(R.id.passwordTextView);
         }
     }
 
     // Create an interface for item click listener
     public interface OnItemClickListener {
         void onItemLongClick(int position);
-        void onItemClick(int position); // Method for handling regular clicks
+        void onItemClick(int position);
     }
 }

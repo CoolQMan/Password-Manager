@@ -15,7 +15,6 @@ import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    // Database version and name
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "passwords_db";
 
@@ -48,7 +47,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Create passwords table
         String CREATE_PASSWORDS_TABLE = "CREATE TABLE " + TABLE_PASSWORDS + "("
                 + COLUMN_ID + " INTEGER PRIMARY KEY,"
                 + COLUMN_WEBSITE + " TEXT,"
@@ -60,7 +58,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Drop the old table if it exists
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PASSWORDS);
         onCreate(db);
     }
@@ -69,6 +66,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void addPassword(Password password) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+
         values.put(COLUMN_WEBSITE, password.getWebsite());
         values.put(COLUMN_USERNAME, password.getUsername());
         values.put(COLUMN_PASSWORD, password.getPassword());
@@ -124,8 +122,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public void deleteAllPasswords() {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("DELETE FROM " + TABLE_PASSWORDS); // Replace TABLE_PASSWORDS with your actual table name
+        db.execSQL("DELETE FROM " + TABLE_PASSWORDS);
         db.close();
     }
-
 }

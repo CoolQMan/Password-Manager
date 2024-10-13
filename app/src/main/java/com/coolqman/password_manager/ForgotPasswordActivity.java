@@ -32,11 +32,9 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
 
-        // Initialize views
         etEmail = findViewById(R.id.emailEditText);
         btnResetPassword = findViewById(R.id.resetPasswordButton);
         backToLoginLink = findViewById(R.id.backToLoginLink);
@@ -69,7 +67,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             return;
         }
 
-        // Send reset password email
         mAuth.sendPasswordResetEmail(email)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {

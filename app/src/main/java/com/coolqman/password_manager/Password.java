@@ -20,7 +20,6 @@ public class Password {
         this.timestamp = timestamp;
     }
 
-    // Getters and Setters
     public int getId() {
         return id;
     }
