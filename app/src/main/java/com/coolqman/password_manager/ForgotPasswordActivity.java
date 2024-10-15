@@ -44,19 +44,9 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             etEmail.setText(intent.getStringExtra("email"));
         }
 
-        btnResetPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                resetPassword();
-            }
-        });
+        btnResetPassword.setOnClickListener(view -> resetPassword());
 
-        backToLoginLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        backToLoginLink.setOnClickListener(view -> finish());
     }
 
     private void resetPassword() {

@@ -3,6 +3,7 @@ package com.coolqman.password_manager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,24 +11,29 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    FirebaseAuth mAuth;
-    EditText emailEditText, etPassword, etPassword2;
-    Button RegisterBtn;
-    ImageButton toggleBtn;
-
-    boolean isPasswordVisible = false;
+    private FirebaseAuth mAuth;
+    private EditText emailEditText, etPassword, etPassword2;
+    private Button RegisterBtn;
+    private ImageButton toggleBtn;
+    private boolean isPasswordVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_register);
+        setTitle("Register");
+
+        if(getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         RegisterBtn = findViewById(R.id.RegisterBtn);
         emailEditText = findViewById(R.id.emailEditText);
@@ -85,5 +91,13 @@ public class RegisterActivity extends AppCompatActivity {
         }
         etPassword.setSelection(etPassword.length());
         isPasswordVisible = !isPasswordVisible;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == android.R.id.home){
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
