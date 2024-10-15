@@ -8,6 +8,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -17,8 +19,8 @@ import java.util.Objects;
 public class AuthActivity extends AppCompatActivity {
 
     private EditText emailEditText, passwordEditText;
-    private Button loginButton, registerButton;
-    private TextView forgotPassword;
+    private Button loginButton;
+    private TextView forgotPassword, registerButton;
     private ImageButton togglePasswordVisibility;
     private boolean isPasswordVisible = false;
     private FirebaseAuth mAuth;
@@ -35,7 +37,7 @@ public class AuthActivity extends AppCompatActivity {
         emailEditText = findViewById(R.id.emailEditText);
         passwordEditText = findViewById(R.id.etPassword);
         loginButton = findViewById(R.id.loginButton);
-        registerButton = findViewById(R.id.registerButton);
+        registerButton = findViewById(R.id.RegisterBtn);
         togglePasswordVisibility = findViewById(R.id.btnTogglePasswordVisibility);
         forgotPassword = findViewById(R.id.forgotPasswordLink);
 
@@ -78,25 +80,12 @@ public class AuthActivity extends AppCompatActivity {
     }
 
     private void validateAndRegister() {
+        Intent intent = new Intent(AuthActivity.this, RegisterActivity.class);
         String email = emailEditText.getText().toString().trim();
-        String password = passwordEditText.getText().toString().trim();
-
-        if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Email and Password cannot be empty", Toast.LENGTH_SHORT).show();
-            return;
+        if(!email.isEmpty()){
+            intent.putExtra("email", email);
         }
-
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(AuthActivity.this, "Registration Successful", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(AuthActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        Toast.makeText(AuthActivity.this, "Registration Failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+        startActivityForResult(intent, 4);
     }
 
     private void togglePasswordVisibility() {
@@ -109,5 +98,13 @@ public class AuthActivity extends AppCompatActivity {
         }
         passwordEditText.setSelection(passwordEditText.length());
         isPasswordVisible = !isPasswordVisible;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK){
+            finish();
+        }
     }
 }
