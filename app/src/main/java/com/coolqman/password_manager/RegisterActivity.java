@@ -4,13 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -19,15 +17,14 @@ import com.google.firebase.auth.FirebaseAuth;
 public class RegisterActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    private EditText emailEditText, etPassword, etPassword2;
+    private EditText emailEditText, passwordEditText, passwordEditText2;
     private Button RegisterBtn;
-    private ImageButton toggleBtn;
+    private ImageButton togglePasswordVisibility;
     private boolean isPasswordVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_register);
         setTitle("Register");
 
@@ -37,9 +34,9 @@ public class RegisterActivity extends AppCompatActivity {
 
         RegisterBtn = findViewById(R.id.RegisterBtn);
         emailEditText = findViewById(R.id.emailEditText);
-        etPassword = findViewById(R.id.etPassword);
-        etPassword2 = findViewById(R.id.etPassword2);
-        toggleBtn = findViewById(R.id.btnTogglePasswordVisibility);
+        passwordEditText = findViewById(R.id.etPassword);
+        passwordEditText2 = findViewById(R.id.etPassword2);
+        togglePasswordVisibility = findViewById(R.id.btnTogglePasswordVisibility);
         Intent intent = getIntent();
         if(intent.hasExtra("email")){
             emailEditText.setText(intent.getStringExtra("email"));
@@ -49,13 +46,13 @@ public class RegisterActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         RegisterBtn.setOnClickListener(view -> validateAndRegister());
-        toggleBtn.setOnClickListener(view -> togglePasswordVisibility());
+        togglePasswordVisibility.setOnClickListener(view -> togglePasswordVisibility());
     }
 
     private void validateAndRegister(){
         String email = emailEditText.getText().toString().trim();
-        String password = etPassword.getText().toString().trim();
-        String password2 = etPassword2.getText().toString().trim();
+        String password = passwordEditText.getText().toString().trim();
+        String password2 = passwordEditText2.getText().toString().trim();
 
         if (email.isEmpty() || password.isEmpty()) {
             Toast.makeText(this, "Email and Password cannot be empty", Toast.LENGTH_SHORT).show();
@@ -83,13 +80,13 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void togglePasswordVisibility() {
         if (isPasswordVisible) {
-            etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-            toggleBtn.setImageResource(R.drawable.baseline_show_24); // Change to hide icon
+            passwordEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            togglePasswordVisibility.setImageResource(R.drawable.baseline_show_24); // Change to hide icon
         } else {
-            etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-            toggleBtn.setImageResource(R.drawable.baseline_hide_24); // Change to show icon
+            passwordEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+            togglePasswordVisibility.setImageResource(R.drawable.baseline_hide_24); // Change to show icon
         }
-        etPassword.setSelection(etPassword.length());
+        passwordEditText.setSelection(passwordEditText.length());
         isPasswordVisible = !isPasswordVisible;
     }
 
