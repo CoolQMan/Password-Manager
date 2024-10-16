@@ -43,7 +43,7 @@ A secure and user-friendly Android application designed to help users manage the
 
 <table>
   <tr>
-    <td><img src="https://github.com/user-attachments/assets/6c2f09f1-66d4-4417-a1ee-c1e7cc29c491" alt="Login/Register Screen" width="250"/></td>
+    <td><img src="https://github.com/user-attachments/assets/771c04a6-7e8a-4009-acc2-1d0a90adc622" alt="Login Screen" width="250"/></td>
     <td><img src="https://github.com/user-attachments/assets/9c3b1bdd-ccdd-4555-8436-635c73f7317b" alt="Main Screen" width="250"/></td>
   </tr>
   <tr>
@@ -51,6 +51,7 @@ A secure and user-friendly Android application designed to help users manage the
     <td><img src="https://github.com/user-attachments/assets/77560391-ab3a-412e-9d62-68b687778589" alt="Edit Password" width="250"/></td>
   </tr>
 </table>
+
 
 ## License
 
